@@ -174,8 +174,9 @@ procédure pédopornographie écrite et validée juridiquement, AIPD refaite pou
   statistiques de progression, export GPX avec troncature des extrémités, privé par défaut.
 - **Éducation et dressage** : programmes, progression par chien, bibliothèque de contenus.
 - **Hébergement et véhicules adaptés** : annuaire, mise en relation. **Sans encaissement
-  dans un premier temps** (question B3) — la réservation avec paiement est un projet en soi,
-  qui déclenche les obligations de place de marché.
+  dans un premier temps** (décision B3 du 8 août 2026 : aucun flux de paiement avant la
+  Phase 3) — la réservation avec paiement est un projet en soi, qui déclenche les
+  obligations de place de marché.
 - **Passerelle K9 Experience Solution** : kits de premiers secours, aménagement de véhicules,
   formations. Naturellement rattachée au module Premiers secours livré en Phase 1.
 
@@ -184,8 +185,9 @@ procédure pédopornographie écrite et validée juridiquement, AIPD refaite pou
 ## Ce qui n'est volontairement pas dans le plan
 
 - **Une application web.** Aucune valeur au MVP, double le périmètre de sécurité.
-- **Un abonnement premium avant la Phase 3.** Sans base d'utilisateurs il n'y a personne à
-  convertir, et le paiement ajoute des obligations réglementaires lourdes.
+- **Tout flux de paiement avant la Phase 3** — tranché le 8 août 2026. Sans base
+  d'utilisateurs il n'y a personne à convertir, et le paiement ajoute des obligations
+  réglementaires lourdes.
 - **Les microservices.** À reconsidérer si un module devient un goulot d'étranglement mesuré,
   jamais par anticipation.
 - **Le chiffrement de bout en bout des messages.** Incompatible avec l'obligation de

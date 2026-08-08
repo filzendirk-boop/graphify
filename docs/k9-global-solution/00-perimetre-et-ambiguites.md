@@ -61,9 +61,18 @@ managée séparée, sauvegardes séparées, accès humain séparé. Détail en `
 Ces trois points changent la nature du travail. Je n'attends pas de réponse pour avoir
 produit les documents de conception, mais il en faut une avant d'écrire du code.
 
-**État au 8 août 2026 : B2 est tranché (18 ans partout). B1 et B3 restent ouverts.**
+**État au 8 août 2026 : les trois questions sont tranchées.** B1 — dépôt neuf
+`k9-global-solution`. B2 — 18 ans partout. B3 — aucun flux de paiement avant la Phase 3.
+Cette section est conservée pour la traçabilité des décisions et de leur motif.
 
-### B1 — Le dépôt de travail actuel n'est pas celui du projet
+### B1 — Dépôt du projet — ✅ **TRANCHÉ : dépôt neuf `k9-global-solution`**
+
+> **Décision du 8 août 2026 : le code vivra dans un dépôt neuf `k9-global-solution`,
+> organisé en mono-dépôt** (`apps/mobile` Flutter, `apps/api` NestJS, `infra` Terraform).
+> Le présent dossier de conception reste dans `graphify` tant que le nouveau dépôt n'est
+> pas accessible ; il sera repris à l'identique à la création de celui-ci.
+
+Rappel du constat qui a motivé la décision.
 
 Le dépôt dans lequel je travaille (`filzendirk-boop/graphify`) contient **Graphify**, une
 application web de visualisation de données en React/Redux/D3 issue d'un cursus Fullstack
@@ -76,10 +85,15 @@ Phase 0 du plan de sécurité (secrets, environnements, CI/CD, branches protég�
 posée sur un dépôt neuf pour être auditable. Les documents de conception sont en revanche
 livrés ici, faute d'autre emplacement disponible dans cette session.
 
-**Décision attendue :** créer un dépôt neuf `k9-global-solution` (recommandé — mono-repo
-`apps/mobile` + `apps/api` + `infra`), ou confirmer que K9 doit vivre dans ce dépôt-ci.
-Je n'ai accès qu'à `filzendirk-boop/graphify` dans cette session ; l'ajout d'un autre dépôt
-doit être autorisé côté GitHub.
+**Conséquence opérationnelle :** l'accès au nouveau dépôt doit être ouvert côté GitHub —
+la session courante n'a d'accès qu'à `filzendirk-boop/graphify`. Tant que ce n'est pas
+fait, la Phase 0 ne peut pas démarrer : ses premiers livrables (branches protégées,
+CI/CD, gestion des secrets) sont des propriétés du dépôt lui-même.
+
+**Sans objet du fait de cette décision :** l'audit d'historique et la rotation de secrets
+qu'aurait imposés la réutilisation de `graphify` (voir `03-plan-securite-conformite.md`
+§4.2), ce dépôt ayant un `postinstall` qui crée un fichier `secrets.js` et un historique
+mentionnant l'ajout de secrets.
 
 ### B2 — Âge minimum général de l'application — ✅ **TRANCHÉ : 18 ans partout**
 
@@ -112,10 +126,14 @@ le titulaire du chien est très majoritairement majeur, et réversible : ce segm
 plus tard, si souhaité, par un sous-profil « accompagné » — bien plus facile à ajouter qu'à
 retirer.
 
-### B3 — Modèle de monétisation et statut vis-à-vis des paiements
+### B3 — Monétisation — ✅ **TRANCHÉ : aucun flux de paiement avant la Phase 3**
 
-Le brief impose un PSP certifié PCI-DSS (§3.4) mais ne dit pas **ce qui est vendu**. Or les
-implications réglementaires diffèrent radicalement :
+> **Décision du 8 août 2026 : les Phases 1 et 2a sont entièrement gratuites, sans aucun
+> flux de paiement.** La question de la monétisation est rouverte à l'entrée de la Phase 3,
+> pas avant.
+
+Rappel des options et de leurs implications, conservé parce que l'arbitrage devra être
+repris en Phase 3 :
 
 - **Abonnement premium** (fonctionnalités de l'app) → Apple/Google imposent leurs achats
   in-app avec commission 15–30 % ; Stripe/Viva ne peuvent pas être utilisés pour du contenu
@@ -129,11 +147,26 @@ implications réglementaires diffèrent radicalement :
 - **Mise en relation sans encaissement** (l'app renvoie vers le site du loueur) → aucune de
   ces obligations. C'est de très loin le plus simple pour un MVP.
 
-**Ma recommandation :** Phases 1 à 2a **gratuites et sans aucun flux de paiement**, réservation
-en Phase 3 d'abord en simple mise en relation sans encaissement, et abonnement premium
-seulement quand il y a une base d'utilisateurs à convertir. Cela retire entièrement le
-paiement du chemin critique du MVP. Viva.com reste pertinent pour les ventes de kits de
-premiers secours en circuit B2C classique, hors app.
+**Ce que la décision retire du périmètre MVP :** l'intégration d'un PSP, la gestion des
+remboursements et litiges, le droit de rétractation, le bouton de résiliation allemand
+(§ 312k BGB), et toute la conformité de place de marché. Le paiement sort entièrement du
+chemin critique des Phases 0 à 2a.
+
+**Ce que la décision ne retire pas.** Les tables `bookings` et `providers` restent au
+modèle de données (`02-modele-de-donnees.md` §1.6) : elles portent l'annuaire et la mise en
+relation, qui eux sont bien au programme de la Phase 3. Seul le champ `psp_reference` reste
+inutilisé jusque-là. Retirer ces tables pour les réintroduire dans un an coûterait plus cher
+que de les laisser dormantes, et leur présence ne crée aucune obligation tant qu'aucun
+montant n'est encaissé.
+
+L'invariant I10 (aucune donnée de carte bancaire sur notre infrastructure) reste évidemment
+applicable le jour où le paiement arrivera.
+
+**Recommandation pour la Phase 3, à confirmer le moment venu :** commencer par la mise en
+relation sans encaissement — l'app renvoie vers le site du loueur ou de l'hébergeur —, et
+n'envisager l'abonnement premium qu'une fois une base d'utilisateurs constituée. Viva.com
+reste pertinent pour les ventes de kits de premiers secours en circuit B2C classique, hors
+application.
 
 ---
 
@@ -182,7 +215,9 @@ le modèle de données (`02-modele-de-donnees.md`, tables `moderation_*`) et dan
 
 ## 5. Ce que je propose comme prochaine étape
 
-1. Vous tranchez B1 (dépôt) et B3 (monétisation). ~~B2 (âge minimum)~~ : tranché, 18 ans partout.
+1. ~~Vous tranchez B1, B2 et B3~~ — fait le 8 août 2026 : dépôt neuf, 18 ans partout,
+   aucun paiement avant la Phase 3. **Reste à ouvrir l'accès GitHub au dépôt
+   `k9-global-solution`**, sans quoi la Phase 0 ne peut pas démarrer.
 2. Vous relisez `01-architecture.md` §4 (isolation des volets) — c'est la décision la plus
    coûteuse à revenir dessus plus tard, et celle sur laquelle j'aimerais un accord explicite.
 3. Sur validation, j'initialise le dépôt Phase 0 : structure de dossiers, CI/CD, gestion des

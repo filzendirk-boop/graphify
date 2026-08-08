@@ -188,10 +188,11 @@ Points de méthode qui méritent d'être explicites :
 - `gitleaks` en pré-commit **et** en CI. Un secret commité est considéré comme compromis même
   après réécriture de l'historique : la procédure impose la rotation, pas seulement la
   suppression.
-- Note sur le dépôt actuel : `graphify` contient un `postinstall` qui crée `secrets.js` et un
-  historique mentionnant « new secret for current host ». Si K9 devait réutiliser ce dépôt
-  (question B1), un audit de l'historique et une rotation de tout secret présent seraient un
-  préalable non négociable.
+- Note sur le dépôt `graphify` : il contient un `postinstall` qui crée `secrets.js` et un
+  historique mentionnant « new secret for current host ». La décision B1 du 8 août 2026
+  (dépôt neuf `k9-global-solution`) rend **sans objet** l'audit d'historique et la rotation
+  de secrets qu'aurait imposés sa réutilisation. K9 démarre sur un historique vierge, ce qui
+  est aussi ce qui rend la Phase 0 auditable.
 
 ### 4.3 Chiffrement
 
@@ -372,7 +373,9 @@ Souvent découvert trop tard, et bloquant pour la mise en ligne :
   Play) : doivent correspondre exactement au registre des traitements. Une divergence est un
   motif de retrait.
 - **Achats in-app** : toute fonctionnalité premium débloquée dans l'app doit passer par les
-  achats in-app, avec la commission associée. Point à intégrer au modèle économique (B3).
+  achats in-app, avec la commission associée. **Sans objet jusqu'à la Phase 3** (décision B3
+  du 8 août 2026 : aucun flux de paiement avant) — l'app est soumise aux stores comme
+  application gratuite, ce qui allège aussi le premier passage en revue.
 - **Sortie de plateforme** : les stores tolèrent mal les mécanismes qui poussent les
   utilisateurs vers un paiement externe. La modération des « tentatives de sortie de
   plateforme » (§3.1 du brief) sert d'ailleurs surtout à la protection anti-escroquerie.
