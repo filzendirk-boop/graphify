@@ -147,6 +147,21 @@ mais le **niveau d'assurance** reste différencié. Les Volets 2 et 3 s'appuient
 déclaratif ; le Volet 1 exige toujours une vérification documentaire par un tiers. Un âge
 minimum uniforme ne dispense d'aucune des quatre conditions du Volet 1.
 
+### I14 — Dépôts privés, dossier de sécurité non publié
+
+Exigence du porteur de projet, 8 août 2026. Les dépôts du projet sont privés. Le dossier de
+conception — modèle de menace, plan de sécurité, calendrier des contrôles — n'est pas publié,
+parce qu'il énonce noir sur blanc quels contrôles ne sont pas encore en place et jusqu'à
+quand.
+
+*Ne sera jamais proposé :* ouvrir le dépôt en public « pour la vitrine » ou pour faciliter un
+outil tiers, publier le plan de sécurité comme gage de transparence, ni coller un extrait du
+modèle de menace dans un ticket, une issue publique ou un canal externe.
+
+Cela ne fait pas obstacle à la transparence *due* : politique de confidentialité, mentions
+légales, rapport de transparence DSA et `security.txt` sont publics par obligation — ce sont
+des documents écrits pour l'être, contrairement au dossier interne.
+
 ---
 
 ## Une limite honnête de ce document

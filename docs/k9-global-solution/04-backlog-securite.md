@@ -13,7 +13,8 @@ P2 = souhaitable · **[GATE]** = porte de validation, rien ne passe en productio
 
 | ID | Titre | Prio | Critère d'acceptation |
 |---|---|---|---|
-| A01 | Créer le dépôt K9 avec branches protégées | P0 | `main` protégée : revue obligatoire d'un tiers, CI verte requise, push direct interdit y compris pour les administrateurs, commits signés |
+| A01 | Créer le dépôt K9 **en privé**, avec branches protégées | P0 | Visibilité **privée** à la création et vérifiée ensuite ; `main` protégée : revue obligatoire d'un tiers, CI verte requise, push direct interdit y compris pour les administrateurs, commits signés |
+| A01b | Verrouiller la visibilité et les accès du dépôt | P1 | Passage en public réservé aux propriétaires ; forks désactivés ; accès nominatifs revus trimestriellement ; alerte si la visibilité change |
 | A02 | Provisionner l'infrastructure en Terraform, région UE | P0 | `terraform plan` reproductible, état distant chiffré et verrouillé, aucune ressource créée à la main ; les trois environnements sortent du même code |
 | A03 | Créer les **trois bases séparées** avec rôles distincts | P0 **[GATE]** | `k9_core`, `k9_friendship`, `k9_dating` existent ; `app_core` ne peut pas se connecter à `k9_friendship` ni `k9_dating` — prouvé par un test qui tente la connexion et vérifie l'échec |
 | A04 | Instance PostgreSQL dédiée pour `k9_dating` | P0 | Instance nº2 distincte, groupe de sécurité réseau distinct, sauvegardes séparées |

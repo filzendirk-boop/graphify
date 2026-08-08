@@ -68,9 +68,17 @@ Cette section est conservée pour la traçabilité des décisions et de leur mot
 ### B1 — Dépôt du projet — ✅ **TRANCHÉ : dépôt neuf `k9-global-solution`**
 
 > **Décision du 8 août 2026 : le code vivra dans un dépôt neuf `k9-global-solution`,
-> organisé en mono-dépôt** (`apps/mobile` Flutter, `apps/api` NestJS, `infra` Terraform).
-> Le présent dossier de conception reste dans `graphify` tant que le nouveau dépôt n'est
-> pas accessible ; il sera repris à l'identique à la création de celui-ci.
+> organisé en mono-dépôt** (`apps/mobile` Flutter, `apps/api` NestJS, `infra` Terraform),
+> **en visibilité privée**. Le présent dossier de conception reste dans `graphify` tant que
+> le nouveau dépôt n'est pas accessible ; il sera repris à l'identique à la création de
+> celui-ci.
+
+**Visibilité privée — exigence explicite du porteur de projet, 8 août 2026.** Le dépôt est
+privé à la création et le reste. Ce n'est pas seulement une préférence commerciale : le
+dossier versionné contient le modèle de menace, le plan de sécurité et le calendrier
+d'arrivée de chaque contrôle. Publié, il indiquerait à un attaquant non seulement comment le
+système est protégé, mais surtout **quels contrôles ne sont pas encore en place et jusqu'à
+quand**. Un plan de sécurité daté est un document interne, pas une pièce de communication.
 
 Rappel du constat qui a motivé la décision.
 
