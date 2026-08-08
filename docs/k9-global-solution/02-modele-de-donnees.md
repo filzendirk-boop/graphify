@@ -46,6 +46,9 @@ d'exécution : `users.avatar_media_id` et `media.owner_id` forment un cycle de c
 
 ```sql
 CREATE TYPE user_status AS ENUM ('pending_email', 'active', 'suspended', 'deactivated', 'erased');
+-- L'âge minimum étant de 18 ans partout (décision B2), ce qui varie n'est plus l'âge
+-- mais le NIVEAU D'ASSURANCE sur cet âge : déclaratif pour les Volets 2 et 3,
+-- document vérifié par un tiers pour le Volet 1.
 CREATE TYPE age_assurance AS ENUM ('none', 'self_declared', 'document_verified');
 
 CREATE TABLE users (
@@ -54,9 +57,9 @@ CREATE TABLE users (
   external_idp_sub    text UNIQUE,                    -- identifiant Keycloak
   status              user_status NOT NULL DEFAULT 'pending_email',
   -- Aucun mot de passe stocké ici : l'authentification est déléguée à Keycloak.
-  birth_date          date,                           -- effacé après calcul, voir §7
+  birth_date          date,                           -- purgée après contrôle, voir §7
+  signup_date         date NOT NULL DEFAULT CURRENT_DATE,
   age_assurance       age_assurance NOT NULL DEFAULT 'none',
-  is_adult            boolean NOT NULL DEFAULT false, -- dérivé, recalculé par tâche planifiée
   country             char(2) NOT NULL,               -- ISO 3166-1 : LU, BE, FR, DE
   locale              text NOT NULL DEFAULT 'fr',     -- fr, de, en, lb
   display_name        text,
@@ -64,16 +67,33 @@ CREATE TABLE users (
   created_at          timestamptz NOT NULL DEFAULT now(),
   last_active_at      timestamptz,
   erased_at           timestamptz,
-  CONSTRAINT users_erased_has_no_email CHECK (erased_at IS NULL OR email IS NULL)
+  CONSTRAINT users_erased_has_no_email CHECK (erased_at IS NULL OR email IS NULL),
+  -- Majorité imposée par le moteur, pas par le formulaire d'inscription (ticket D15).
+  -- Ancrée sur la DATE D'INSCRIPTION et non sur la date du jour : le contrôle exprime
+  -- « était majeur en s'inscrivant », un fait qui ne dérive jamais.
+  CONSTRAINT users_adult_at_signup
+    CHECK (birth_date IS NULL OR birth_date + INTERVAL '18 years' <= signup_date)
 );
 
 CREATE INDEX users_status_idx     ON users (status) WHERE status = 'active';
 CREATE INDEX users_last_active_idx ON users (last_active_at DESC NULLS LAST);
 ```
 
-`is_adult` est un champ dérivé et non la source de vérité : la date de naissance reste
-l'origine, mais la majorité est recalculée quotidiennement pour éviter de faire un calcul
-d'âge dans chaque requête de découverte, où une erreur serait grave.
+Trois remarques sur ce bloc, toutes conséquences de la décision « 18 ans partout ».
+
+**Le champ `is_adult` a disparu.** Il n'a plus de sens : si tout utilisateur est majeur, un
+booléen de majorité ne distingue rien et ne peut que se désynchroniser. La majorité est
+désormais une propriété de la table entière, garantie par contrainte.
+
+**Le contrôle est ancré sur `signup_date`, pas sur la date du jour.** La variante
+« intuitive » (`age(birth_date) >= 18 ans`) a été testée et écartée : elle vérifie l'âge au
+moment de l'évaluation, donc quelqu'un inscrit à 16 ans passerait le contrôle deux ans plus
+tard. La forme retenue exprime un fait daté qui reste vrai indéfiniment.
+
+**`birth_date` est nullable, et c'est voulu.** Après contrôle et à l'issue du délai de
+rétention (§7), la date de naissance est purgée : elle a rempli son office et n'a plus de
+base légale à être conservée. La contrainte tolère donc `NULL`, qui signifie « contrôlée
+puis purgée » — jamais « non contrôlée », l'inscription étant impossible sans elle.
 
 ```sql
 CREATE TYPE consent_purpose AS ENUM (
@@ -941,7 +961,7 @@ régimes coexistent :
 | Donnée | Rétention | Effacement du compte |
 |---|---|---|
 | Compte, profil, photos | durée du compte | suppression réelle |
-| `birth_date` | jusqu'à validation de la majorité, puis remplacée par `is_adult` | supprimée |
+| `birth_date` | 12 mois après inscription, puis purgée — la contrainte `users_adult_at_signup` a déjà fait foi | supprimée |
 | Profils chien, carnet de santé | durée du compte | suppression réelle |
 | Messages (tous volets) | durée du compte, ou 12 mois après clôture de la conversation | suppression réelle, **y compris côté destinataire** |
 | Traces GPS | jusqu'à suppression par l'utilisateur | suppression réelle (base + objets) |
@@ -979,6 +999,12 @@ Résultats :
 | Test | Attendu | Obtenu |
 |---|---|---|
 | Application du DDL des trois bases | aucune erreur | ✅ 0 erreur |
+| Inscription à 17 ans | rejet | ✅ violation de `users_adult_at_signup` |
+| Inscription à 18 ans pile | acceptation | ✅ |
+| Inscription la veille des 18 ans | rejet | ✅ rejeté |
+| Inscription rétroactive d'un mineur (né 2010, inscrit 2020) | rejet | ✅ rejeté |
+| Purge de `birth_date` après contrôle | possible | ✅ |
+| Variante `age(birth_date) >= 18 ans` | **écartée** | ⚠️ accepte un compte créé à 16 ans une fois l'utilisateur devenu majeur — dérive dans le temps |
 | `app_core` → connexion à `k9_dating` | refus | ✅ `FATAL: permission denied for database "k9_dating"` |
 | `app_core` → connexion à `k9_friendship` | refus | ✅ refus |
 | `app_core` → connexion à `k9_core` | succès | ✅ |

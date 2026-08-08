@@ -10,7 +10,7 @@ n'énonce pas ses adversaires est une liste de courses.
 
 | # | Adversaire | Objectif | Impact | Contrôles principaux |
 |---|---|---|---|---|
-| M1 | **Adulte cherchant à contacter un mineur** | Entrer en contact via un volet social | Catastrophique — pénal, réputationnel, fin du produit | Âge minimum 18 ans (recommandation B2), vérification d'identité Volet 1, modération photo, signalement `minor_suspected` en priorité 1, détection de vocabulaire |
+| M1 | **Adulte cherchant à contacter un mineur** | Entrer en contact via un volet social | Catastrophique — pénal, réputationnel, fin du produit | Âge minimum 18 ans partout (décision B2), vérification d'identité Volet 1, modération photo, classification d'âge apparent, signalement `minor_suspected` en priorité 1, détection de vocabulaire |
 | M2 | **Harceleur / conjoint violent** | Localiser une personne précise | Grave — danger physique | Distances en paliers, décalage stable par utilisateur, jamais de coordonnées d'un tiers renvoyées, suppression EXIF, blocage en un tap |
 | M3 | **Escroc sentimental (« romance scam »)** | Extorquer de l'argent | Grave — préjudice financier, réputation | Détection de coordonnées bancaires et de sortie de plateforme, limitation de comptes multiples, vérification d'identité Volet 1, signalement `scam` |
 | M4 | **Faux profils en masse / bots** | Spam, hameçonnage, gonflement | Modéré à grave | Attestation d'appareil (Play Integrity / App Attest), CAPTCHA, limitation par IP et par appareil, vérification e-mail |
@@ -29,11 +29,26 @@ la conception des API. C'est pour cela que le §6 de l'architecture existe.
 
 ## 2. Protection des mineurs
 
+**Âge minimum de l'application : 18 ans partout, sans exception** (décision du 8 août 2026,
+question B2 tranchée). Aucun mineur n'a vocation à détenir un compte, dans aucun module.
+
+Cela ne fait pas disparaître la menace M1, et c'est le contresens à éviter : un âge minimum
+uniforme est une règle déclarative, pas un contrôle. Un adolescent qui déclare une fausse
+date de naissance entre dans les Volets 2 et 3 exactement comme avant. Ce que la décision
+change réellement : elle rend tout compte de mineur **illégitime par construction**, donc
+immédiatement suspendable sur signalement sans arbitrage, là où un seuil à 16 ans aurait
+imposé de distinguer le mineur autorisé du mineur non autorisé. La détection reste
+entièrement nécessaire — tickets D07, D09 et D10.
+
 ### 2.1 Différenciation par volet, telle qu'implémentée
+
+L'âge minimum est désormais identique partout ; ce qui reste différencié, c'est le **niveau
+d'assurance** sur cet âge.
 
 | Contrôle | Volet 1 Rencontre | Volet 2 Amitié | Volet 3 Balade |
 |---|---|---|---|
-| Âge minimum | 18 ans, **vérifié** | âge général de l'app | âge général de l'app |
+| Âge minimum | 18 ans | 18 ans | 18 ans |
+| Niveau d'assurance sur l'âge | **document vérifié par tiers** | déclaratif | déclaratif |
 | Vérification d'identité tierce | **obligatoire, bloquante** | non | non |
 | Déclaratif seul suffisant | non | oui | oui |
 | Modération photo automatique | oui | oui | oui |
@@ -138,10 +153,10 @@ Points de méthode qui méritent d'être explicites :
 
 | Pays | Point d'attention |
 |---|---|
-| **Luxembourg** | CNPD autorité chef de file (guichet unique). Notification de violation sous 72 h. Conservation comptable 10 ans. |
-| **Belgique** | Âge de consentement numérique 13 ans (le plus bas des quatre) — sans objet si l'on retient 18 ans. APD attentive aux apps de rencontre. |
-| **France** | Âge 15 ans. Transparence des avis en ligne (art. L111-7-2 code de la consommation) : indiquer la date d'expérience et le traitement des avis — d'où le champ `visited_on`. Recommandations CNIL sur la géolocalisation. |
-| **Allemagne** | Âge 16 ans. **Bouton de résiliation obligatoire** (§ 312k BGB) pour tout abonnement — impacte la Phase 3. TTDSG pour l'accès au terminal. Jurisprudence stricte sur les mentions légales (Impressum). |
+| **Luxembourg** | Âge 16 ans, **sans objet**. CNPD autorité chef de file (guichet unique). Notification de violation sous 72 h. Conservation comptable 10 ans. |
+| **Belgique** | Âge de consentement numérique 13 ans (le plus bas des quatre) — **sans objet** : l'app est à 18 ans. APD attentive aux apps de rencontre. |
+| **France** | Âge 15 ans, **sans objet**. Transparence des avis en ligne (art. L111-7-2 code de la consommation) : indiquer la date d'expérience et le traitement des avis — d'où le champ `visited_on`. Recommandations CNIL sur la géolocalisation. |
+| **Allemagne** | Âge 16 ans, **sans objet**. **Bouton de résiliation obligatoire** (§ 312k BGB) pour tout abonnement — impacte la Phase 3. TTDSG pour l'accès au terminal. Jurisprudence stricte sur les mentions légales (Impressum). |
 
 ## 4. Sécurité applicative
 

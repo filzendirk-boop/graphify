@@ -132,6 +132,21 @@ vulnérabilité haute en avertissement.
 Si une échéance est menacée, la variable d'ajustement est le **périmètre fonctionnel**,
 jamais les contrôles de la section 3.
 
+### I13 — Âge minimum de 18 ans partout
+
+Décision du porteur de projet, 8 août 2026, applicable à tous les modules sans exception.
+Le contrôle est porté par une contrainte de base de données ancrée sur la date
+d'inscription (`users_adult_at_signup`), pas par une validation de formulaire.
+
+*Ne sera jamais proposé :* abaisser l'âge pour un module jugé « inoffensif », créer un mode
+« accompagné par un adulte » sans reprendre l'ensemble du dispositif de protection des
+mineurs, ou traiter cette règle comme une simple valeur de configuration modifiable.
+
+À ne pas confondre, en revanche, avec un affaiblissement de I3 : l'âge minimum est uniforme,
+mais le **niveau d'assurance** reste différencié. Les Volets 2 et 3 s'appuient sur du
+déclaratif ; le Volet 1 exige toujours une vérification documentaire par un tiers. Un âge
+minimum uniforme ne dispense d'aucune des quatre conditions du Volet 1.
+
 ---
 
 ## Une limite honnête de ce document

@@ -59,13 +59,19 @@ P2 = souhaitable · **[GATE]** = porte de validation, rien ne passe en productio
 
 ---
 
-## Épopée SEC-D — Protection des mineurs et Volet 1 (Phase 2b)
+## Épopée SEC-D — Protection des mineurs et Volet 1 (Phase 2b, sauf D15/D16 en Phase 0)
+
+> Contexte : l'âge minimum est fixé à **18 ans partout** (D01, clos). D15 et D16 relèvent
+> donc de l'inscription générale et sont dus dès la Phase 0 ; le reste de l'épopée reste
+> attaché à l'activation du Volet 1.
 
 | ID | Titre | Prio | Critère d'acceptation |
 |---|---|---|---|
-| D01 | Trancher l'âge minimum général (question B2) | P0 **[GATE]** | Décision écrite et datée ; si < 18 ans, les tickets D02 et D03 deviennent obligatoires |
-| D02 | Consentement parental différencié par pays | P0 si <18 | LU 16 / DE 16 / FR 15 / BE 13 ; mécanisme de vérification raisonnable ; **sans objet si 18 ans retenu** |
-| D03 | Cloisonnement mineurs/majeurs dans les Volets 2 et 3 | P0 si <18 | Un mineur n'est jamais suggéré à un majeur et réciproquement ; **sans objet si 18 ans retenu** |
+| D01 | Trancher l'âge minimum général (question B2) | — | ✅ **CLOS le 8 août 2026 : 18 ans partout, sans exception.** Décision tracée en `00-perimetre-et-ambiguites.md` §B2 et en invariant I13 |
+| ~~D02~~ | ~~Consentement parental différencié par pays~~ | — | ❌ **SANS OBJET** suite à D01 : plus aucun mineur, donc aucun consentement parental à recueillir. Quatre régimes nationaux retirés du périmètre |
+| ~~D03~~ | ~~Cloisonnement mineurs/majeurs Volets 2 et 3~~ | — | ❌ **SANS OBJET** suite à D01 : la population est entièrement majeure |
+| D15 | Contrôle de majorité à l'inscription | P0 | Date de naissance obligatoire, refus si < 18 ans à la date du jour ; contrainte en base et non seulement en formulaire ; le refus n'indique pas quel critère a échoué (évite d'apprendre à réessayer) |
+| D16 | Empêcher la réinscription immédiate après refus pour minorité | P1 | Un refus pour âge ne doit pas se contourner en resoumettant une autre date trente secondes plus tard ; verrou par attestation d'appareil, sans conserver la date refusée |
 | D04 | Intégrer le prestataire de vérification d'identité | P0 **[GATE]** | itsme et/ou Veriff en production ; **aucune image de document n'est stockée chez nous** — vérifié par revue du code et du bucket |
 | D05 | Verrou d'intégrité `dating_profiles` ↔ `identity_checks` | P0 **[GATE]** | Le déclencheur PostgreSQL rejette l'insertion d'un profil sans vérification approuvée et majeure ; test d'intégration tentant le contournement |
 | D06 | Modération photo humaine systématique avant publication Volet 1 | P0 **[GATE]** | Aucun `dating_profiles.is_active = true` sans `photos_reviewed_at` — contrainte `CHECK` en base |
@@ -157,10 +163,10 @@ et **documentées par écrit**.
 
 | Porte | Tickets requis | Condition |
 |---|---|---|
-| **Sortie de Phase 0** | A01–A05, A09, A10, B01–B05, B08, C01–C05, C08, F01–F05, F10, G01, G03, G06, G09, H01 | Le socle et l'étanchéité sont vérifiés automatiquement |
+| **Sortie de Phase 0** | A01–A05, A09, A10, B01–B05, B08, C01–C05, C08, **D15**, F01–F05, F10, G01, G03, G06, G09, H01 | Le socle et l'étanchéité sont vérifiés automatiquement, et aucun compte de mineur ne peut être créé |
 | **Sortie de Phase 1** | E01–E06, E10, E12, G04, G08, G11, H02–H05, H08 | Modération, DSA, effacement et géo-confidentialité opérationnels |
 | **Entrée en Phase 2a** | G02 (AIPD), C06, C07 | Analyse d'impact validée avant tout matching |
-| **Entrée en Phase 2b** | D01–D14 en totalité, G02 refaite, H06 | **Vérification d'identité, isolation auditée par un tiers et pentest externe — cumulativement** |
+| **Entrée en Phase 2b** | D04–D14 et D15–D16 en totalité, G02 refaite, H06 | **Vérification d'identité, isolation auditée par un tiers et pentest externe — cumulativement.** D01 est clos, D02 et D03 sont sans objet |
 
 Ces portes correspondent à ce que la section 3 du brief pose comme non-négociable. Elles ne
 se contournent pas par décision de calendrier ; le seul chemin est de réduire le périmètre

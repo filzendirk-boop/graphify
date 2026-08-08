@@ -61,6 +61,8 @@ managée séparée, sauvegardes séparées, accès humain séparé. Détail en `
 Ces trois points changent la nature du travail. Je n'attends pas de réponse pour avoir
 produit les documents de conception, mais il en faut une avant d'écrire du code.
 
+**État au 8 août 2026 : B2 est tranché (18 ans partout). B1 et B3 restent ouverts.**
+
 ### B1 — Le dépôt de travail actuel n'est pas celui du projet
 
 Le dépôt dans lequel je travaille (`filzendirk-boop/graphify`) contient **Graphify**, une
@@ -79,27 +81,36 @@ livrés ici, faute d'autre emplacement disponible dans cette session.
 Je n'ai accès qu'à `filzendirk-boop/graphify` dans cette session ; l'ajout d'un autre dépôt
 doit être autorisé côté GitHub.
 
-### B2 — Âge minimum général de l'application (le brief laisse le choix ouvert, §3.1)
+### B2 — Âge minimum général de l'application — ✅ **TRANCHÉ : 18 ans partout**
 
-C'est un choix de conformité, pas de produit, et il contamine tout le reste : consentement
-parental, modération, classification sur les stores, et surtout le périmètre du RGPD
-applicable aux mineurs.
+> **Décision du porteur de projet, 8 août 2026 : 18 ans pour l'ensemble de l'application,
+> sans exception.** Ce point n'est plus ouvert ; il est repris comme invariant I13 dans
+> `06-invariants-non-negociables.md`.
 
+Rappel du raisonnement, conservé pour la traçabilité vis-à-vis d'un auditeur ou de la CNPD.
 Les quatre juridictions cibles ne fixent pas le même âge de consentement numérique
-(art. 8 RGPD, marge nationale 13–16 ans) : **Luxembourg 16 ans, Allemagne 16 ans,
-France 15 ans, Belgique 13 ans**. Un âge minimum inférieur à 18 ans impose donc un
-mécanisme de recueil et de vérification du consentement parental **différencié par pays**,
-plus une modération renforcée sur les conversations impliquant un mineur, plus un
-cloisonnement supplémentaire mineurs/majeurs dans les Volets 2 et 3.
+(art. 8 RGPD, marge nationale 13–16 ans) : Luxembourg 16 ans, Allemagne 16 ans,
+France 15 ans, Belgique 13 ans. Un âge minimum inférieur à 18 ans aurait imposé un
+mécanisme de consentement parental différencié par pays, une modération renforcée des
+conversations impliquant un mineur, et un cloisonnement mineurs/majeurs dans les Volets 2
+et 3.
 
-**Ma recommandation : 18 ans pour l'ensemble de l'application, sans exception.**
-Raisons : supprime quatre régimes de consentement parental à implémenter et maintenir ;
-supprime le risque de contact adulte/mineur dans les Volets 2 et 3, qui est le risque
-réputationnel majeur du produit ; simplifie la classification sur les stores ; et rend
-l'isolation du Volet 1 défendable devant un auditeur. Coût : perte du segment 16–18 ans
-pour les balades, marginal sur un marché où le titulaire du chien est très majoritairement
-majeur. Si vous voulez ce segment plus tard, il s'ouvre dans un second temps avec un
-sous-profil « accompagné », ce qui est plus facile que de le retirer.
+**Ce que la décision retire du périmètre :** les quatre régimes de consentement parental
+(ticket D02, désormais sans objet), le cloisonnement mineurs/majeurs des Volets 2 et 3
+(ticket D03, sans objet), et le risque de contact adulte/mineur dans les volets sociaux —
+qui était le risque réputationnel majeur du produit.
+
+**Ce que la décision ne retire pas, et c'est le point à ne pas confondre :** l'âge minimum
+est désormais le même partout, mais le **niveau d'assurance sur cet âge reste différencié**.
+Volets 2 et 3 : 18 ans déclaratif. Volet 1 : 18 ans **vérifié par prestataire tiers**,
+condition bloquante inchangée. Un âge minimum uniforme ne dispense en rien de la
+vérification d'identité du module Rencontre — la section 3.1 du brief reste applicable
+intégralement.
+
+**Coût accepté :** perte du segment 16–18 ans pour les balades. Marginal sur un marché où
+le titulaire du chien est très majoritairement majeur, et réversible : ce segment s'ouvrira
+plus tard, si souhaité, par un sous-profil « accompagné » — bien plus facile à ajouter qu'à
+retirer.
 
 ### B3 — Modèle de monétisation et statut vis-à-vis des paiements
 
@@ -171,7 +182,7 @@ le modèle de données (`02-modele-de-donnees.md`, tables `moderation_*`) et dan
 
 ## 5. Ce que je propose comme prochaine étape
 
-1. Vous tranchez B1 (dépôt), B2 (âge minimum) et B3 (monétisation).
+1. Vous tranchez B1 (dépôt) et B3 (monétisation). ~~B2 (âge minimum)~~ : tranché, 18 ans partout.
 2. Vous relisez `01-architecture.md` §4 (isolation des volets) — c'est la décision la plus
    coûteuse à revenir dessus plus tard, et celle sur laquelle j'aimerais un accord explicite.
 3. Sur validation, j'initialise le dépôt Phase 0 : structure de dossiers, CI/CD, gestion des
